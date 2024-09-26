@@ -5,24 +5,13 @@
     <vendor>hapcaper</vendor>
 
     <depends>com.intellij.modules.platform</depends>
-
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.java</depends>
+    <depends>com.intellij.properties</depends>
     <resource-bundle>messages.MyBundle</resource-bundle>
 
-    <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.hapcaper.myideaplugintest.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-    </extensions>
-
-    <applicationListeners>
-        <listener class="com.github.hapcaper.myideaplugintest.listeners.MyApplicationActivationListener" topic="com.intellij.openapi.application.ApplicationActivationListener"/>
-    </applicationListeners>
     <actions>
 
-        <action id="A" class="com.github.hapcaper.myideaplugintest.actions.Aa" text="As" description="SAD">
-            <add-to-group group-id="EditorGutterPopupMenu" anchor="first"/>
-        </action>
-        <action id="SD" class="com.github.hapcaper.myideaplugintest.actions.SD" text="SD" description="SD">
-            <add-to-group group-id="HelpMenu" anchor="first"/>
-        </action>
         <action id="MyEditorPopupMenu" class="com.github.hapcaper.myideaplugintest.actions.MyEditorPopupMenu"
                 text="MyEditorPopupMenu" description="MyEditorPopupMenu">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>

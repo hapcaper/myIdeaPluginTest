@@ -5,41 +5,50 @@ fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
 
 plugins {
-    id("java") // Java support
-    alias(libs.plugins.kotlin) // Kotlin support
-    alias(libs.plugins.gradleIntelliJPlugin) // Gradle IntelliJ Plugin
-    alias(libs.plugins.changelog) // Gradle Changelog Plugin
-    alias(libs.plugins.qodana) // Gradle Qodana Plugin
-    alias(libs.plugins.kover) // Gradle Kover Plugin
-//    id("org.jetbrains.intellij.platform") version "2.0.0-rc1"
+    // Java support
+    id("java")
+    // Kotlin support
+//    id("org.jetbrains.kotlin.jvm") version "1.9.10"
+    // Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
+    id("org.jetbrains.intellij") version "1.17.2"
+    // Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
+    id("org.jetbrains.changelog") version "2.2.0"
 }
 
-group = properties("pluginGroup").get()
-version = properties("pluginVersion").get()
+dependencies {
+    implementation("org.springframework:spring-expression:6.1.4")
+    implementation("com.alibaba:fastjson:1.2.83")
+    implementation("org.reflections:reflections:0.10.2") {
+        exclude(group = "org.slf4j")
+    }
+    testCompileOnly("com.alibaba:fastjson:1.2.83")
+    testCompileOnly("com.fasterxml.jackson.core:jackson-databind:2.14.3")
+    // https://projectlombok.org/setup/gradle
+    testCompileOnly("org.projectlombok:lombok:1.18.30")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
+}
 
-// Configure project's dependencies
+group = "ink.organics"
+version = "2.0.6"
+
+
 repositories {
     mavenCentral()
 }
 
-// Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
-dependencies {
-    implementation("com.alibaba:fastjson:1.2.78")
-}
-
-// Set the JVM language level used to build the project.
-kotlin {
-    jvmToolchain(17)
-}
-
-// Configure Gradle IntelliJ Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
-    pluginName = properties("pluginName")
-    version = properties("platformVersion")
-    type = properties("platformType")
-
-    // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
-    plugins = properties("platformPlugins").map { it.split(',').map(String::trim).filter(String::isNotEmpty) }
+    // 这个版本是本地Runtime版本
+    version.set("2023.3")
+    updateSinceUntilBuild.set(false)
+    // https://github.com/JetBrains/gradle-intellij-plugin/issues/38
+    plugins.set(
+        listOf(
+            "org.intellij.intelliLang",
+            "com.intellij.java",
+            "org.jetbrains.kotlin",
+            "com.intellij.properties"
+        )
+    )
 }
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
@@ -48,16 +57,6 @@ changelog {
     repositoryUrl = properties("pluginRepositoryUrl")
 }
 
-// Configure Gradle Kover Plugin - read more: https://github.com/Kotlin/kotlinx-kover#configuration
-kover {
-    reports {
-        total {
-            xml {
-                onCheck = true
-            }
-        }
-    }
-}
 
 tasks {
     wrapper {
