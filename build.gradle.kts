@@ -16,7 +16,7 @@ plugins {
 }
 
 dependencies {
-    implementation("org.springframework:spring-expression:6.1.4")
+    implementation("org.springframework:spring-expression:6.1.13")
     implementation("com.alibaba:fastjson:1.2.83")
     implementation("cn.hutool:hutool-all:4.5.2")
     implementation("org.reflections:reflections:0.10.2") {
